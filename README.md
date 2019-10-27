@@ -9,10 +9,10 @@
 6. Test it is working by navigating to the localhost url as shown in termal. The window should display 'working'
 
 ### File Explanation
-`api/api.py` - This contains the routes exposing the api endpoints
-`handleBloodRequest.py` - handles the `/requestblood` api endpoint
-`handleCollectBlood.py` - handles the `/collectblood` api endpoint
-`handleRegisterDonor.py` - handles the `/registerdonor` api endpoint
+- `api/api.py` - This contains the routes exposing the api endpoints
+- `handleBloodRequest.py` - handles the `/requestblood` api endpoint
+- `handleCollectBlood.py` - handles the `/collectblood` api endpoint
+- `handleRegisterDonor.py` - handles the `/registerdonor` api endpoint
 
 
 ### Sample Queries

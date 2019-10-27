@@ -19,6 +19,7 @@
 ### Sample Queries
 Some to test queries, navigate to the url as directed in your terminal (should be `localhost:5000`)
 
-- Entering `http://localhost:5000/registerdonor?name=jane&bloodtype=a` should display `TODO: HandleRegisterDonor`
-- Entering `http://localhost:5000/requestblood?amount=50&hospital=stmarys&bloodtype=B+` should display `TODO: HandleBloodRequest`
+- Entering `http://localhost:5000/donor/register?name=anto&bloodtype=0-` should display `TODO: HandleRegisterDonor`
+- Entering `http://localhost:5000/blood/request?amount=50&hospital=stmarys&bloodtype=a+` should display `TODO: HandleBloodRequest`
+- Entering `http://localhost:5000/blood/collect?bloodtype=A+&carid=batmobile` should display `TODO: HandleBloodRequest`
 

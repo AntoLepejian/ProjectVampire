@@ -8,6 +8,9 @@
 5. Run `python api.py` which is in `/api` directory to run the server
 6. Test it is working by navigating to the localhost url as shown in termal. The window should display 'working'
 
+### File Explanation
+
+
 ### Sample Queries
 Some to test queries, navigate to the url as directed in your terminal (should be `localhost:5000`)
 

@@ -11,9 +11,7 @@
 
 ### File Explanation
 - `api/api.py` - This contains the routes exposing the api endpoints
-- `handleBloodRequest.py` - handles the `/requestblood` api endpoint
-- `handleCollectBlood.py` - handles the `/collectblood` api endpoint
-- `handleRegisterDonor.py` - handles the `/registerdonor` api endpoint
+- `handleXXXXXX` - Files beginning with `handle` are api endpoint handlers
 
 
 ### Sample Queries

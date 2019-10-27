@@ -11,7 +11,7 @@
 
 ### File Explanation
 - `api/api.py` - This contains the routes exposing the api endpoints
-- `handleXXXXXX` - Files beginning with `handle` are api endpoint handlers
+- `handleXXXXXX.py` - Files beginning with `handle` are api endpoint handlers
 
 
 ### Sample Queries

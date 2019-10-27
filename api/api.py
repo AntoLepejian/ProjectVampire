@@ -5,6 +5,8 @@ from flask import request
 from handleBloodRequest import handleBloodRequest
 from handleRegisterDonor import handleRegisterDonor
 from handleCollectBlood import handleCollectBlood
+from handleScreenBlood import handleScreenBlood
+from handleDeregisterDonor import handleDeregisterDonor
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -16,7 +18,7 @@ def home():
 
 # This will be called by hospitals. 
 # Could be changed to POST, but doesn't really matter
-@app.route('/requestblood', methods=['GET'])
+@app.route('/blood/request', methods=['GET'])
 def blood_request():
    if ('amount' in request.args):
       amount = int(request.args['amount'])
@@ -36,7 +38,7 @@ def blood_request():
 
 
 #This will be called by potential blood donors to register themselves in the database
-@app.route('/registerdonor', methods=['GET'])
+@app.route('/donor/register', methods=['GET'])
 def register_donor():
    if ('name' in request.args):
       name = str(request.args['name'])
@@ -49,16 +51,40 @@ def register_donor():
    response = handleRegisterDonor(name, bloodtype)
    return response
 
+#This will be called by the donor to deregister themselves from the database
+@app.route('/donor/deregister', methods=['GET'])
+def deregister_donor():
+   if ('name' in request.args):
+      name = str(request.args['name'])
+   else:
+      return "Missing 'name'"
+   response = handleDeregisterDonor(name)
+   return response
 
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
-@app.route('/collectblood', methods=['GET'])
+@app.route('/blood/collect', methods=['GET'])
 def collect_blood():
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
       return "Error: Missing 'bloodtype'"
+   if ('carid' in request.args):
+      carid = str(request.args['carid'])
+   else:
+      return "Missing 'carid'"
 
-   response = handleCollectBlood(bloodtype)
+   response = handleCollectBlood(carid, bloodtype)
+   return response
+
+#This will be called by the batmobile to screen all the blood it has
+@app.route('/blood/screen', methods=['GET'])
+def screen_blood():
+   if ('carid' in request.args):
+      carid = str(request.args['carid'])
+   else: 
+      return "Missing 'carid'"
+
+   response = handleScreenBlood(carid)
    return response
 
 app.run()

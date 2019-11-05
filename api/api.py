@@ -10,6 +10,7 @@ from handleCollectBlood import handleCollectBlood
 from handleScreenBlood import handleScreenBlood
 from handleDeregisterDonor import handleDeregisterDonor
 from handleQueryDonor import handleQueryDonor
+from handleRegisterBatmobile import handleRegisterBatmobile
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -40,9 +41,8 @@ def blood_request():
    return response
 
 
-#This will be called by potential blood donors to register themselves in the database
-#
-# INFO: Compeleted
+# This will be called by potential blood donors to register themselves in the database
+# INFO: Compeleted by Rez
 @app.route('/donor/register', methods=['GET'])
 def register_donor():
    #These checks ensure that the API call has correct query parameters
@@ -61,7 +61,8 @@ def register_donor():
    updatePersistantDatabase(updatedDB)
    return response
 
-# INFO : Compeleted
+# This will result all the blood donors
+# INFO: Completed by rez
 @app.route('/donor/query', methods=['GET'])
 def query_donor():
    response = handleQueryDonor(dbjson)
@@ -106,6 +107,15 @@ def screen_blood():
    updatePersistantDatabase(updatedDB)
    return response
 
+@app.route('/batmobile/register', methods=['GET'])
+def register_car():
+   if ('carid' in request.args):
+      carid = str(request.args['carid'])
+   else: 
+      return "Missing 'carid'"
+   response, updatedDB = handleRegisterBatmobile(carid, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
 
 def updatePersistantDatabase(newdb):
    if (db != None):

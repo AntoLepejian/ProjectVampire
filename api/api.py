@@ -2,11 +2,14 @@ import sys
 
 import flask
 from flask import request
+from tinydb import TinyDB
+
 from handleBloodRequest import handleBloodRequest
 from handleRegisterDonor import handleRegisterDonor
 from handleCollectBlood import handleCollectBlood
 from handleScreenBlood import handleScreenBlood
 from handleDeregisterDonor import handleDeregisterDonor
+from handleQueryDonor import handleQueryDonor
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -14,7 +17,7 @@ app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Working"
+   return "Working"
 
 # This will be called by hospitals. 
 # Could be changed to POST, but doesn't really matter
@@ -33,13 +36,16 @@ def blood_request():
    else:
       return "Error: No 'bloodtype' field provided"
 
-   response = handleBloodRequest(amount, hospital, bloodtype)
+   response = handleBloodRequest(amount, hospital, bloodtype, dbjson)
    return response
 
 
 #This will be called by potential blood donors to register themselves in the database
+#
+# INFO: Compeleted
 @app.route('/donor/register', methods=['GET'])
 def register_donor():
+   #These checks ensure that the API call has correct query parameters
    if ('name' in request.args):
       name = str(request.args['name'])
    else:
@@ -48,7 +54,17 @@ def register_donor():
       bloodtype = str(request.args['bloodtype'])
    else:
       return "Error: Missing 'bloodtype'"
-   response = handleRegisterDonor(name, bloodtype)
+   #Here we call the function and pass it argument 'dbjson', where dbjson is just a list format of the database
+   response, updatedDB = handleRegisterDonor(name, bloodtype, dbjson)
+   #The function returns an updatedDB. This is the database after changes have been made, we call updatePersistantDatabase
+   #to update the local json file for persistance
+   updatePersistantDatabase(updatedDB)
+   return response
+
+# INFO : Compeleted
+@app.route('/donor/query', methods=['GET'])
+def query_donor():
+   response = handleQueryDonor(dbjson)
    return response
 
 #This will be called by the donor to deregister themselves from the database
@@ -58,7 +74,8 @@ def deregister_donor():
       name = str(request.args['name'])
    else:
       return "Missing 'name'"
-   response = handleDeregisterDonor(name)
+   response, updatedDB = handleDeregisterDonor(name, dbjson)
+   updatePersistantDatabase(updatedDB)
    return response
 
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
@@ -73,7 +90,8 @@ def collect_blood():
    else:
       return "Missing 'carid'"
 
-   response = handleCollectBlood(carid, bloodtype)
+   response, updatedDB = handleCollectBlood(carid, bloodtype, dbjson)
+   updatePersistantDatabase(updatedDB)
    return response
 
 #This will be called by the batmobile to screen all the blood it has
@@ -84,7 +102,18 @@ def screen_blood():
    else: 
       return "Missing 'carid'"
 
-   response = handleScreenBlood(carid)
+   response, updatedDB = handleScreenBlood(carid, dbjson)
+   updatePersistantDatabase(updatedDB)
    return response
 
+
+def updatePersistantDatabase(newdb):
+   if (db != None):
+      db.purge()
+   for item in newdb:
+      db.insert(item)
+
+
+db = TinyDB('database/localdb.json')
+dbjson = db.all()
 app.run()

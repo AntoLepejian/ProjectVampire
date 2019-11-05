@@ -11,6 +11,7 @@ from handleScreenBlood import handleScreenBlood
 from handleDeregisterDonor import handleDeregisterDonor
 from handleQueryDonor import handleQueryDonor
 from handleRegisterBatmobile import handleRegisterBatmobile
+from handleQueryBatmobile import handleQueryBatmobile
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -22,6 +23,7 @@ def home():
 
 # This will be called by hospitals. 
 # Could be changed to POST, but doesn't really matter
+# TODO
 @app.route('/blood/request', methods=['GET'])
 def blood_request():
    if ('amount' in request.args):
@@ -69,6 +71,7 @@ def query_donor():
    return response
 
 #This will be called by the donor to deregister themselves from the database
+# INFO : Completed by rez
 @app.route('/donor/deregister', methods=['GET'])
 def deregister_donor():
    if ('name' in request.args):
@@ -80,6 +83,7 @@ def deregister_donor():
    return response
 
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
+# INFO: Completed by rez
 @app.route('/blood/collect', methods=['GET'])
 def collect_blood():
    if ('bloodtype' in request.args):
@@ -107,6 +111,15 @@ def screen_blood():
    updatePersistantDatabase(updatedDB)
    return response
 
+# Will return all batmobiles and their contents
+# INFO: Completed by rez
+@app.route('/batmobile/query', methods=['GET'])
+def query_car():
+   response = handleQueryBatmobile(dbjson)
+   return response
+
+# Will Register batmobile and initialise batmobile inventory
+# INFO: Completed by rez
 @app.route('/batmobile/register', methods=['GET'])
 def register_car():
    if ('carid' in request.args):
@@ -117,6 +130,8 @@ def register_car():
    updatePersistantDatabase(updatedDB)
    return response
 
+# DO NOT TOUCH: This is just a helper function that updates the database.
+# If you create a function with side effects that change the database, make sure you call this
 def updatePersistantDatabase(newdb):
    if (db != None):
       db.purge()

@@ -6,6 +6,7 @@
 2. Update apt-get `sudo apt-get update`
 2. Install venv: `sudo apt install python3-venv`
 3. Navigate to `/api/` and enter `source venv/bin/activate`
+4. type `export LC_ALL=C`
 4. Run `pip install Flask` while in `(venv)` mode
 5. Run `pip install tinydb` while in `(venv)` mode
 6. Run `python api.py` which is in `/api` directory to run the server

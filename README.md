@@ -1,8 +1,9 @@
 # ProjectVampire
 
 ### Running Guide
-1. clone this repo to your computer
+0. clone this repo to your computer
 1. Install Python
+2. Update apt-get `sudo apt-get update`
 2. Install venv: `sudo apt install python3-venv`
 3. Navigate to `/api/` and enter `source venv/bin/activate`
 4. Run `pip install Flask` while in `(venv)` mode

@@ -42,28 +42,33 @@ function Batmobile() {
   };
   return (
     <div className="home">
-      <span>
-        {" "}
-        <InputGroup className="mb-3">
-          <InputGroup.Prepend>
-            <InputGroup.Text id="basic-addon1">#</InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl
-            name="carid"
-            placeholder="Car ID"
-            aria-label="Car ID"
-            onChange={handleChange}
-          />
-        </InputGroup>
-      </span>
-      <span>
-        <Button onClick={handleLogin} variant="primary">
-          Login
-        </Button>{" "}
-        <Button onClick={handleRegister} variant="primary">
-          Register
-        </Button>
-      </span>
+      {loggedIn && (
+        <div>
+          <span>
+            {" "}
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">#</InputGroup.Text>
+              </InputGroup.Prepend>
+              <FormControl
+                name="carid"
+                placeholder="Car ID"
+                aria-label="Car ID"
+                onChange={handleChange}
+              />
+            </InputGroup>
+          </span>
+          <span>
+            <Button onClick={handleLogin} variant="primary">
+              Login
+            </Button>{" "}
+            <Button onClick={handleRegister} variant="primary">
+              Register
+            </Button>
+          </span>
+        </div>
+      )}
+      {!loggedIn && <div></div>}
     </div>
   );
 }

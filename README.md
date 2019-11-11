@@ -15,6 +15,7 @@
 1. type `export LC_ALL=C`
 1. Run `pip install Flask` while in `(venv)` mode
 1. Run `pip install tinydb` while in `(venv)` mode
+1. Run `pip install flask_cors` while in `(venv)` mode
 1. Run `python api.py` which is in `/api` directory to run the server
 1. Test it is working by navigating to the localhost url as shown in termal. The window should display 'working'
 

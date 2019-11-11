@@ -54,6 +54,7 @@ function Batmobile() {
       .then(res => res.json())
       .then(res => {
         if (res.value === "success") {
+          setErrors([]);
           setloggedIn(true);
         } else {
           setErrors([...errors, "Already registered, try Login?"]);
@@ -101,7 +102,7 @@ function Batmobile() {
           setErrors([]);
           fetchBatMobileData();
         } else {
-          setErrors([...errors, res.msg]);
+          setErrors([res.msg]);
         }
       });
   };

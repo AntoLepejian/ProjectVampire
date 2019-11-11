@@ -3,6 +3,7 @@ import sys
 import flask
 from flask import request
 from tinydb import TinyDB
+from flask_cors import CORS
 
 from handleBloodRequest import handleBloodRequest
 from handleRegisterDonor import handleRegisterDonor
@@ -18,6 +19,12 @@ from handleCheckBatmobileRegistered import handleCheckBatmobileRegistered
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+cors = CORS(app)
+
+# cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+# app.config['CORS_HEADERS'] = 'Content-Type'
+
+# @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 
 
 @app.route('/', methods=['GET'])

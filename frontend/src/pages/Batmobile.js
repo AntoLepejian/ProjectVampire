@@ -30,7 +30,7 @@ function Batmobile() {
           setErrors([]);
           setloggedIn(true);
         } else {
-          setErrors(errors.push("You have to register"));
+          setErrors([...errors, "You have to register"]);
         }
       });
   };
@@ -46,13 +46,13 @@ function Batmobile() {
         "Access-Control-Allow-Origin": "*"
       }
     })
-      //   .then(res => res.json())
+      .then(res => res.json())
       .then(res => console.log(res));
   };
   return (
     <div className="home">
       {errors.map((err, id) => (
-        <Alert key={id} variant="warning">
+        <Alert key={id} variant="danger">
           {err}
         </Alert>
       ))}

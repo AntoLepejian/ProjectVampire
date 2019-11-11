@@ -2,3 +2,4 @@
 /Scripts
 pyvenv.cfg
 */__pycache__
+api/database/localdb.json

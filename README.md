@@ -8,6 +8,7 @@
 1. Install Python
 1. Update apt-get `sudo apt-get update`
 1. Install venv: `sudo apt install python3-venv`
+1. Navigate to `/api/` and enter `python3 -m venv venv`
 1. Navigate to `/api/` and enter `source venv/bin/activate`
 1. type `export LC_ALL=C`
 1. Run `pip install Flask` while in `(venv)` mode

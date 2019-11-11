@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -18,12 +18,10 @@ function App() {
             aria-describedby="basic-addon1"
           />
         </InputGroup>
+        <Button variant="primary">Login</Button>
       </span>
       <span>
-        <p>Not registered yet?</p>
-        <Button variant="primary" style={{ margin: "0 auto" }}>
-          Register
-        </Button>
+        <Button variant="primary">Register</Button>
       </span>
     </div>
   );

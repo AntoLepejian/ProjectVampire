@@ -30,7 +30,10 @@ function Batmobile() {
           setErrors([]);
           setloggedIn(true);
         } else {
-          setErrors([...errors, "You have to register"]);
+          setErrors([
+            ...errors,
+            "No account found, You have to register first"
+          ]);
         }
       });
   };
@@ -47,7 +50,13 @@ function Batmobile() {
       }
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => {
+        if (res.value === "success") {
+          setloggedIn(true);
+        } else {
+          setErrors([...errors, "Already registered, try Login?"]);
+        }
+      });
   };
   return (
     <div className="home">
@@ -83,8 +92,8 @@ function Batmobile() {
         </div>
       )}
       {loggedIn && (
-        <div>
-          <p>logged in</p>
+        <div className="home">
+          <p>hello car {carid}</p>
         </div>
       )}
     </div>

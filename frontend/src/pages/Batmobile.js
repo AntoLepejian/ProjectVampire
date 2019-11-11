@@ -80,6 +80,7 @@ function Batmobile() {
         }
       });
   };
+
   const handleCollectBlood = () => {
     var url = new URL("http://localhost:5000/blood/collect"),
       params = { carid: carid, bloodtype: bloodtype };
@@ -161,7 +162,7 @@ function Batmobile() {
       )}
       {loggedIn && (
         <div>
-          <h3>hello car {carid}</h3>
+          <h3>Batmobile ID: {carid}</h3>
           <Bargraph />
           <select
             value={bloodtype}
@@ -180,8 +181,7 @@ function Batmobile() {
           </select>{" "}
           <Button onClick={handleCollectBlood} variant="primary">
             Collect Blood
-          </Button>
-          <br />
+          </Button>{" "}
           <span>
             <Button onClick={handleScreenBlood} variant="primary">
               Screen all Bloods

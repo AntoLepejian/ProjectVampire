@@ -2,36 +2,19 @@ import React, { useState } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
-
-
-
+import Alert from "react-bootstrap/Alert";
 
 class App extends React.Component {
-
- 
-  
-
-
   constructor(props) {
     super(props);
-    this.state = { value: "BloodO" };
+    this.state = { bloodtype: "A+", name: "", loggedIn: false, errors: [] };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  Donor() {
-    const [name, setName] = useState(-1);
-    const [errors, setErrors] = useState([]);
-    const [bloodtype, setBloodtype] = useState(null);
-    const [loggedIn, setloggedIn] = useState(false);
-    const handleChange = e => {
-      setName(e.target.value);
-    }
-
-    const handleLogin = () => {
+  handleLogin = () => {
     var url = new URL("http://localhost:5000/donor/checkregistered"),
-      params = { name: name };
+      params = { name: this.state.name };
     Object.keys(params).forEach(key =>
       url.searchParams.append(key, params[key])
     );
@@ -44,20 +27,21 @@ class App extends React.Component {
       .then(res => {
         console.log(res);
         if (res.status === "registered") {
-          setErrors([]);
-          setloggedIn(true);
+          this.setState({ loggedIn: true, errors: [] });
         } else {
-          setErrors([
-            ...errors,
-            "No account found, You have to register first"
-          ]);
+          this.setState(prevState => ({
+            errors: [
+              ...prevState.errors,
+              "No account found, You have to register first"
+            ]
+          }));
         }
       });
-  }
+  };
 
-  const handleRegister = () => {
+  handleRegister = () => {
     var url = new URL("http://localhost:5000/donor/register"),
-      params = { name: name };
+      params = { name: this.state.name, bloodtype: this.state.bloodtype };
     Object.keys(params).forEach(key =>
       url.searchParams.append(key, params[key])
     );
@@ -69,65 +53,85 @@ class App extends React.Component {
       .then(res => res.json())
       .then(res => {
         if (res.value === "success") {
-          setloggedIn(true);
+          this.setState({ loggedIn: true, errors: [] });
         } else {
-          setErrors([...errors, "Already registered, try Login?"]);
+          this.setState(prevState => ({
+            errors: [...prevState.errors, "Already registered, try Login?"]
+          }));
         }
       });
   };
 
-
-}
-
   handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    alert("Your Blood Type is: " + this.state.value);
-    event.preventDefault();
+    this.setState({ bloodtype: event.target.value });
   }
 
   render() {
     return (
       <div className="home">
-        <div>
-          <span>
-            {" "}
-            <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl
-                placeholder="Name"
-                aria-label="Name"
-                aria-describedby="basic-addon1"
-              />
-            </InputGroup>
-          </span>
-        </div>
+        {this.state.errors.map((err, id) => (
+          <Alert key={id} variant="danger">
+            {err}
+          </Alert>
+        ))}
 
-        <span>
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              Pick Your Blood Type:
-              <select value={this.state.value} onChange={this.handleChange}>
-                <option value="BloodA">Blood A</option>
-                <option value="BloodB">Blood B</option>
-                <option value="BloodAB">Blood AB</option>
-                <option value="BloodO">Blood O (bens blig is big)</option>
-              </select>
-            </label>
-            <input type="submit" value="Submit" />
-          </form>
-        </span>
+        {!this.state.loggedIn && (
+          <div>
+            <div>
+              <span>
+                {" "}
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <FormControl
+                    placeholder="Name"
+                    aria-label="Name"
+                    aria-describedby="basic-addon1"
+                    onChange={event => {
+                      this.setState({ name: event.target.value });
+                    }}
+                  />
+                </InputGroup>
+              </span>
+            </div>
 
-        <span>
-          <Button variant="primary">Login</Button>
-        </span>
-        <span>
-          <Button variant="primary">Register</Button>
-        </span>
+            <span>
+              <label>
+                Pick Your Blood Type:
+                <select value={this.state.value} onChange={this.handleChange}>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </label>
+            </span>
+
+            <span>
+              <Button variant="primary" onClick={this.handleLogin}>
+                Login
+              </Button>
+            </span>
+            <span>
+              <Button variant="primary" onClick={this.handleRegister}>
+                Register
+              </Button>
+            </span>
+          </div>
+        )}
+
+        {this.state.loggedIn && (
+          <div>
+            <p>
+              hello {this.state.name} {this.state.bloodtype}
+            </p>
+          </div>
+        )}
       </div>
     );
   }

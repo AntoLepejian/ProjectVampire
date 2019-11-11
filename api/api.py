@@ -40,15 +40,15 @@ def blood_request():
    if ('amount' in request.args):
       amount = int(request.args['amount'])
    else:
-      return "Error: No 'Amount' field provided. Please specify amount"
+      return '{ "value": "failed", "msg": "Missing amount" }'
    if ('hospital' in request.args):
       hospital = str(request.args['hospital'])
    else:
-      return "Error: No 'hospital' field provided. Please specify hospital name"
+      return '{ "value": "failed", "msg": "Missing hospital" }'
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
-      return "Error: No 'bloodtype' field provided"
+      return '{ "value": "failed", "msg": "Missing bloodtype" }'
 
    response = handleBloodRequest(amount, hospital, bloodtype, dbjson)
    return response
@@ -62,11 +62,11 @@ def register_donor():
    if ('name' in request.args):
       name = str(request.args['name'])
    else:
-      return "Error: Missing 'name'"
+      return '{ "value": "failed", "msg": "Missing name" }'
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
-      return "Error: Missing 'bloodtype'"
+      return '{ "value": "failed", "msg": "Missing bloodtype" }'
    #Here we call the function and pass it argument 'dbjson', where dbjson is just a list format of the database
    response, updatedDB = handleRegisterDonor(name, bloodtype, dbjson)
    #The function returns an updatedDB. This is the database after changes have been made, we call updatePersistantDatabase
@@ -81,7 +81,7 @@ def query_donor():
    if ('name' in request.args):
       name = str(request.args['name'])
    else:
-      return "Missing 'name'"
+      return '{ "value": "failed", "msg": "Missing name" }'
    response = handleQueryDonor(name, dbjson)
    return response
 
@@ -92,7 +92,7 @@ def deregister_donor():
    if ('name' in request.args):
       name = str(request.args['name'])
    else:
-      return "Missing 'name'"
+      return '{ "value": "failed", "msg": "Missing name" }'
    response, updatedDB = handleDeregisterDonor(name, dbjson)
    updatePersistantDatabase(updatedDB)
    return response
@@ -102,7 +102,7 @@ def check_donor_registered():
    if ('name' in request.args):
       name = str(request.args['name'])
    else:
-      return "Missing 'name'"
+      return '{ "value": "failed", "msg": "Missing name" }'
    response = handleCheckDonorRegistered(name, dbjson)
    return response
 
@@ -112,7 +112,7 @@ def check_batmobile_registered():
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else: 
-      return "Missing 'carid'"
+      return '{ "value": "failed", "msg": "Missing carid" }'
    response = handleCheckBatmobileRegistered(carid, dbjson)
    return response
 
@@ -123,7 +123,7 @@ def collect_blood():
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
-      return '{ "value": "msg": "Error: Missing bloodtype"}'
+      return '{ "value": "failed", "msg": "Missing bloodtype"}'
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else:
@@ -139,7 +139,7 @@ def screen_blood():
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else: 
-      return "Missing 'carid'"
+      return '{ "value": "failed", "msg": "Missing carid" }'
 
    response, updatedDB = handleScreenBlood(carid, dbjson)
    updatePersistantDatabase(updatedDB)
@@ -152,7 +152,7 @@ def query_car():
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else: 
-      return "Missing 'carid'"
+      return '{ "value": "failed", "msg": "Missing carid" }'
    response = handleQueryBatmobile(carid, dbjson)
    return response
 
@@ -165,7 +165,7 @@ def register_car():
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else: 
-      return "Missing 'carid'"
+      return '{ "value": "failed", "msg": "Missing carid" }'
    response, updatedDB = handleRegisterBatmobile(carid, dbjson)
    updatePersistantDatabase(updatedDB)
    return response

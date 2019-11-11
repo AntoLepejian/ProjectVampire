@@ -10,17 +10,20 @@ function App() {
         {" "}
         <InputGroup className="mb-3">
           <InputGroup.Prepend>
-            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+            <InputGroup.Text id="basic-addon1">#</InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
-            placeholder="Username"
-            aria-label="Username"
+            placeholder="Car ID"
+            aria-label="Car ID"
             aria-describedby="basic-addon1"
           />
         </InputGroup>
       </span>
       <span>
-        <Button variant="primary">Register</Button>
+        <p>Not registered yet?</p>
+        <Button variant="primary" style={{ margin: "0 auto" }}>
+          Register
+        </Button>
       </span>
     </div>
   );

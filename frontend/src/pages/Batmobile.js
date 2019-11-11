@@ -3,11 +3,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import Alert from "react-bootstrap/Alert";
+import Bargraph from "../components/Bargraph";
 
 function Batmobile() {
   const [carid, setCarid] = useState(-1);
   const [errors, setErrors] = useState([]);
-  const [bloodtype, setBloodtype] = useState(null);
+  const [bloodtype, setBloodtype] = useState("A+");
   const [loggedIn, setloggedIn] = useState(false);
   const handleChange = e => {
     setCarid(e.target.value);
@@ -60,6 +61,25 @@ function Batmobile() {
       });
   };
 
+  const fetchBatMobileData = () => {
+    var url = new URL("http://localhost:5000/batmobile/query"),
+      params = { carid: carid };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res !== {}) {
+        } else {
+          setErrors([...errors, "something went wrong"]);
+        }
+      });
+  };
   const handleCollectBlood = () => {
     var url = new URL("http://localhost:5000/blood/collect"),
       params = { carid: carid, bloodtype: bloodtype };
@@ -76,6 +96,7 @@ function Batmobile() {
         if (res.value === "success") {
           // TODO
           // fetch new blood levels
+          setErrors([]);
         } else {
           setErrors([...errors, res.msg]);
         }
@@ -98,6 +119,7 @@ function Batmobile() {
         if (res.value === "success") {
           // TODO
           // fetch new blood levels
+          setErrors([]);
         } else {
           setErrors([...errors, res.msg]);
         }
@@ -140,15 +162,26 @@ function Batmobile() {
       {loggedIn && (
         <div>
           <h3>hello car {carid}</h3>
-          <select>
-            <option value="bloodA">A+</option>
-            <option value="bloodB">A-</option>
-            <option value="bloodAB">B+</option>
-            <option value="bloodO">B-</option>
+          <Bargraph />
+          <select
+            value={bloodtype}
+            onChange={event => {
+              setBloodtype(event.target.value);
+            }}
+          >
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
           </select>{" "}
           <Button onClick={handleCollectBlood} variant="primary">
             Collect Blood
           </Button>
+          <br />
           <span>
             <Button onClick={handleScreenBlood} variant="primary">
               Screen all Bloods

@@ -75,6 +75,7 @@ function Batmobile() {
       .then(res => res.json())
       .then(res => {
         if (res !== {}) {
+          console.log(res);
         } else {
           setErrors([...errors, "something went wrong"]);
         }
@@ -98,6 +99,7 @@ function Batmobile() {
           // TODO
           // fetch new blood levels
           setErrors([]);
+          fetchBatMobileData();
         } else {
           setErrors([...errors, res.msg]);
         }
@@ -121,6 +123,7 @@ function Batmobile() {
           // TODO
           // fetch new blood levels
           setErrors([]);
+          fetchBatMobileData();
         } else {
           setErrors([...errors, res.msg]);
         }

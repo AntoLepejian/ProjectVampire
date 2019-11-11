@@ -1,8 +1,7 @@
 import json
-def handleQueryDonor(db):
-   donors = []
+def handleQueryDonor(name, db):
    for item in db:
-      print(str(item))
       if (item['type'] == 'donor'):
-         donors.append(item)
-   return json.dumps(donors)
+         if (item['name'] == name):
+            return json.dumps(item)
+   return '{}'

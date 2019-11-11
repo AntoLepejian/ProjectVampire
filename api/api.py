@@ -12,6 +12,9 @@ from handleDeregisterDonor import handleDeregisterDonor
 from handleQueryDonor import handleQueryDonor
 from handleRegisterBatmobile import handleRegisterBatmobile
 from handleQueryBatmobile import handleQueryBatmobile
+from handleCheckDonorRegistered import handleCheckDonorRegistered
+from handleCheckBatmobileRegistered import handleCheckBatmobileRegistered
+
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -67,7 +70,11 @@ def register_donor():
 # INFO: Completed by rez
 @app.route('/donor/query', methods=['GET'])
 def query_donor():
-   response = handleQueryDonor(dbjson)
+   if ('name' in request.args):
+      name = str(request.args['name'])
+   else:
+      return "Missing 'name'"
+   response = handleQueryDonor(name, dbjson)
    return response
 
 #This will be called by the donor to deregister themselves from the database
@@ -80,6 +87,25 @@ def deregister_donor():
       return "Missing 'name'"
    response, updatedDB = handleDeregisterDonor(name, dbjson)
    updatePersistantDatabase(updatedDB)
+   return response
+# This will be called by the frontend to check if a donor is registered or unregistered
+@app.route('/donor/checkregistered', methods=['GET'])
+def check_donor_registered():
+   if ('name' in request.args):
+      name = str(request.args['name'])
+   else:
+      return "Missing 'name'"
+   response = handleCheckDonorRegistered(name, dbjson)
+   return response
+
+# This will be called bhy the frontend to check is batmobile is registred or unregistered
+@app.route('/batmobile/checkregistered', methods=['GET'])
+def check_batmobile_registered():
+   if ('carid' in request.args):
+      carid = str(request.args['carid'])
+   else: 
+      return "Missing 'carid'"
+   response = handleCheckBatmobileRegistered(carid, dbjson)
    return response
 
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
@@ -115,8 +141,14 @@ def screen_blood():
 # INFO: Completed by rez
 @app.route('/batmobile/query', methods=['GET'])
 def query_car():
-   response = handleQueryBatmobile(dbjson)
+   if ('carid' in request.args):
+      carid = str(request.args['carid'])
+   else: 
+      return "Missing 'carid'"
+   response = handleQueryBatmobile(carid, dbjson)
    return response
+
+
 
 # Will Register batmobile and initialise batmobile inventory
 # INFO: Completed by rez

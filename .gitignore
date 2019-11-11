@@ -2,7 +2,7 @@
 /Scripts
 pyvenv.cfg
 */__pycache__
-api/database.json
+api/database/*
 api/venv
 api/.vscode
-
+api/node_modules

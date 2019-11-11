@@ -7,6 +7,7 @@ import Alert from "react-bootstrap/Alert";
 function Batmobile() {
   const [carid, setCarid] = useState(-1);
   const [errors, setErrors] = useState([]);
+  const [bloodtype, setBloodtype] = useState(null);
   const [loggedIn, setloggedIn] = useState(false);
   const handleChange = e => {
     setCarid(e.target.value);
@@ -58,6 +59,51 @@ function Batmobile() {
         }
       });
   };
+
+  const handleCollectBlood = () => {
+    var url = new URL("http://localhost:5000/blood/collect"),
+      params = { carid: carid, bloodtype: bloodtype };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.value === "success") {
+          // TODO
+          // fetch new blood levels
+        } else {
+          setErrors([...errors, res.msg]);
+        }
+      });
+  };
+
+  const handleScreenBlood = () => {
+    var url = new URL("http://localhost:5000/blood/screen"),
+      params = { carid: carid };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.value === "success") {
+          // TODO
+          // fetch new blood levels
+        } else {
+          setErrors([...errors, res.msg]);
+        }
+      });
+  };
+
   return (
     <div className="home">
       {errors.map((err, id) => (
@@ -92,8 +138,22 @@ function Batmobile() {
         </div>
       )}
       {loggedIn && (
-        <div className="home">
-          <p>hello car {carid}</p>
+        <div>
+          <h3>hello car {carid}</h3>
+          <select>
+            <option value="bloodA">A+</option>
+            <option value="bloodB">A-</option>
+            <option value="bloodAB">B+</option>
+            <option value="bloodO">B-</option>
+          </select>{" "}
+          <Button onClick={handleCollectBlood} variant="primary">
+            Collect Blood
+          </Button>
+          <span>
+            <Button onClick={handleScreenBlood} variant="primary">
+              Screen all Bloods
+            </Button>
+          </span>
         </div>
       )}
     </div>

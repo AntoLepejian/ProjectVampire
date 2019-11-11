@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
+import Alert from "react-bootstrap/Alert";
 
 function Batmobile() {
   const [carid, setCarid] = useState(-1);
+  const [errors, setErrors] = useState([]);
   const [loggedIn, setloggedIn] = useState(false);
   const handleChange = e => {
     setCarid(e.target.value);
@@ -22,7 +24,18 @@ function Batmobile() {
       }
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => {
+        console.log(res);
+        if (res.status === "registered") {
+          setErrors([]);
+          setloggedIn(true);
+        } else {
+          setErrors([
+            ...errors,
+            "No account found, You have to register first"
+          ]);
+        }
+      });
   };
 
   const handleRegister = () => {
@@ -32,17 +45,27 @@ function Batmobile() {
       url.searchParams.append(key, params[key])
     );
     fetch(url, {
-      method: "POST",
       headers: {
         "Access-Control-Allow-Origin": "*"
       }
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => {
+        if (res.value === "success") {
+          setloggedIn(true);
+        } else {
+          setErrors([...errors, "Already registered, try Login?"]);
+        }
+      });
   };
   return (
     <div className="home">
-      {loggedIn && (
+      {errors.map((err, id) => (
+        <Alert key={id} variant="danger">
+          {err}
+        </Alert>
+      ))}
+      {!loggedIn && (
         <div>
           <span>
             {" "}
@@ -68,7 +91,11 @@ function Batmobile() {
           </span>
         </div>
       )}
-      {!loggedIn && <div></div>}
+      {loggedIn && (
+        <div className="home">
+          <p>hello car {carid}</p>
+        </div>
+      )}
     </div>
   );
 }

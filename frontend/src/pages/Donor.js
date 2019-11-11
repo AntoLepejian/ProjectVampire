@@ -18,6 +18,14 @@ function App() {
             aria-describedby="basic-addon1"
           />
         </InputGroup>
+        <span>
+        <select>
+          <option value="bloodA">antos Blig</option>
+          <option value="bloodB">bens Blig</option>
+          <option value="bloodAB"> rez's Blig</option>
+          <option value="bloodO">Zacks Blig</option>
+        </select>  
+      </span>
         <Button variant="primary">Login</Button>
       </span>
       <span>

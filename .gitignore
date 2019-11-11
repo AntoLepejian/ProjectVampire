@@ -2,3 +2,7 @@
 /Scripts
 pyvenv.cfg
 */__pycache__
+api/database.json
+api/venv
+api/.vscode
+

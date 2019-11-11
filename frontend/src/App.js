@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import Batmobile from "./pages/Batmobile";
+import Donor from "./pages/Donor";
 import "./App.css";
 
 function App() {
@@ -24,15 +25,7 @@ function App() {
                 exact
                 component={props => <Batmobile />}
               />
-              <Route
-                path="/donor"
-                exact
-                component={props => (
-                  <div>
-                    <p>donor</p>
-                  </div>
-                )}
-              />
+              <Route path="/donor" exact component={props => <Donor />} />
               <Route
                 path="/hospital"
                 exact

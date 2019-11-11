@@ -4,7 +4,6 @@ import flask
 from flask import request
 from tinydb import TinyDB
 from flask_cors import CORS
-import os
 
 
 from handleBloodRequest import handleBloodRequest
@@ -124,11 +123,11 @@ def collect_blood():
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
-      return "Error: Missing 'bloodtype'"
+      return '{ "value": "msg": "Error: Missing bloodtype"}'
    if ('carid' in request.args):
       carid = str(request.args['carid'])
    else:
-      return "Missing 'carid'"
+      return '{ "value": "failed", "msg": "Missing carid" }'
 
    response, updatedDB = handleCollectBlood(carid, bloodtype, dbjson)
    updatePersistantDatabase(updatedDB)
@@ -178,9 +177,8 @@ def updatePersistantDatabase(newdb):
       db.purge()
    for item in newdb:
       db.insert(item)
-
-if not os.path.exists('database.json'):
-    os.mknod('database.json')
+f = open("database.json", "w+")
+f.close()
 db = TinyDB('database.json')
 dbjson = db.all()
 app.run()

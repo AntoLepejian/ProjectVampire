@@ -1,12 +1,12 @@
 import json
 
-def handleQueryBatmobile(db):
-   batmobiles = []
+def handleQueryBatmobile(carid, db):
    for item in db:
       print(str(item))
       if (item['type'] == 'batmobile'):
-         batmobiles.append(item)
-   return (json.dumps(batmobiles))
+         if (item['carid'] == carid):
+            return json.dumps(item)
+   return "{}"
 
 
 # http://localhost:5000/batmobile/query

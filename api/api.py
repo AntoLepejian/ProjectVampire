@@ -4,6 +4,8 @@ import flask
 from flask import request
 from tinydb import TinyDB
 from flask_cors import CORS
+import os
+
 
 from handleBloodRequest import handleBloodRequest
 from handleRegisterDonor import handleRegisterDonor
@@ -177,7 +179,8 @@ def updatePersistantDatabase(newdb):
    for item in newdb:
       db.insert(item)
 
-
-db = TinyDB('database/localdb.json')
+if not os.path.exists('database.json'):
+    os.mknod('database.json')
+db = TinyDB('database.json')
 dbjson = db.all()
 app.run()

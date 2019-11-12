@@ -163,7 +163,7 @@ function Batmobile() {
   return (
     <div className="home">
       {errors.map((err, id) => (
-        <Alert key={id} variant="danger">
+        <Alert key={id} variant="danger" style={{ width: "800px" }}>
           {err}
         </Alert>
       ))}

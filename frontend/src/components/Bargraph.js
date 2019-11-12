@@ -81,8 +81,8 @@ export default class BarChart extends React.Component {
           options={this.state.options}
           series={this.state.series}
           type="bar"
-          height="350"
-          width="600"
+          height="450"
+          width="800"
         />
       </div>
     );

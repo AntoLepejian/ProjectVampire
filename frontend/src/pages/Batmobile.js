@@ -8,6 +8,8 @@ import Bargraph from "../components/Bargraph";
 function Batmobile() {
   const [carid, setCarid] = useState(-1);
   const [errors, setErrors] = useState([]);
+  const [screened, setScreened] = useState([]);
+  const [unscreened, setUnscreened] = useState([]);
   const [bloodtype, setBloodtype] = useState("A+");
   const [loggedIn, setloggedIn] = useState(false);
   const handleChange = e => {
@@ -31,6 +33,7 @@ function Batmobile() {
         if (res.status === "registered") {
           setErrors([]);
           setloggedIn(true);
+          fetchBatMobileData();
         } else {
           setErrors([
             ...errors,
@@ -56,10 +59,32 @@ function Batmobile() {
         if (res.value === "success") {
           setErrors([]);
           setloggedIn(true);
+          fetchBatMobileData();
         } else {
           setErrors([...errors, "Already registered, try Login?"]);
         }
       });
+  };
+
+  const getBlood = (res, screenOrUnscreened) => {
+    let bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+    let result = [];
+
+    bloodTypes.forEach((type, i) => {
+      result.push(
+        res["blood_" + type][screenOrUnscreened].reduce(function(
+          total,
+          currentValue,
+          currentIndex
+        ) {
+          return (total += currentValue.blood_amount);
+        },
+        0)
+      );
+    });
+
+    console.log(result);
+    return result;
   };
 
   const fetchBatMobileData = () => {
@@ -77,6 +102,10 @@ function Batmobile() {
       .then(res => {
         if (res !== {}) {
           console.log(res);
+          let screenedBlood = getBlood(res, "screened");
+          let unscreenedBlood = getBlood(res, "unscreened");
+          setScreened(screenedBlood);
+          setUnscreened(unscreenedBlood);
         } else {
           setErrors([...errors, "something went wrong"]);
         }
@@ -167,7 +196,7 @@ function Batmobile() {
       {loggedIn && (
         <div>
           <h3>Batmobile ID: {carid}</h3>
-          <Bargraph />
+          <Bargraph screened={screened} unscreened={unscreened} />
           <select
             value={bloodtype}
             onChange={event => {

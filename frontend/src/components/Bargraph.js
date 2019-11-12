@@ -49,14 +49,29 @@ export default class BarChart extends React.Component {
       series: [
         {
           name: "Screened",
-          data: [44, 55, 41, 67, 22, 43, 34, 53]
+          data: this.props.screened
         },
         {
           name: "Unscreened",
-          data: [13, 23, 20, 8, 13, 27, 35, 23]
+          data: this.props.unscreened
         }
       ]
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.screened !== this.props.screened ||
+      nextProps.unscreened !== this.props.unscreened
+    ) {
+      this.setState(state => ({
+        ...state,
+        series: [
+          { name: "Screened", data: nextProps.screened },
+          { name: "Unscreened", data: nextProps.unscreened }
+        ]
+      }));
+    }
   }
 
   render() {

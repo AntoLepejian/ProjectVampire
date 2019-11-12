@@ -39,6 +39,32 @@ class App extends React.Component {
       });
   };
 
+   fetchBatMobileData = () => {
+    var url = new URL("http://localhost:5000/donor/query"),
+      params = { name: this.state.name };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res !== {}) {
+        } else {
+          this.setState(prevState => ({
+          errors: [
+            ...prevState.errors, 
+            "something went wrong"
+          ]
+        }));
+        }
+      });
+  };
+
+
   handleRegister = () => {
     var url = new URL("http://localhost:5000/donor/register"),
       params = { name: this.state.name, bloodtype: this.state.bloodtype };

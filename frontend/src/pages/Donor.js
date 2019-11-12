@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
@@ -7,7 +7,13 @@ import Alert from "react-bootstrap/Alert";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bloodtype: "A+", name: "", loggedIn: false, errors: [] };
+    this.state = {
+      bloodtype: "A+",
+      name: "",
+      loggedIn: false,
+      errors: [],
+      lastCollected: 0
+    };
 
     this.handleChange = this.handleChange.bind(this);
   }
@@ -25,9 +31,9 @@ class App extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         if (res.status === "registered") {
           this.setState({ loggedIn: true, errors: [] });
+          this.getDonorData();
         } else {
           this.setState(prevState => ({
             errors: [
@@ -38,32 +44,6 @@ class App extends React.Component {
         }
       });
   };
-
-   fetchBatMobileData = () => {
-    var url = new URL("http://localhost:5000/donor/query"),
-      params = { name: this.state.name };
-    Object.keys(params).forEach(key =>
-      url.searchParams.append(key, params[key])
-    );
-    fetch(url, {
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        if (res !== {}) {
-        } else {
-          this.setState(prevState => ({
-          errors: [
-            ...prevState.errors, 
-            "something went wrong"
-          ]
-        }));
-        }
-      });
-  };
-
 
   handleRegister = () => {
     var url = new URL("http://localhost:5000/donor/register"),
@@ -80,6 +60,7 @@ class App extends React.Component {
       .then(res => {
         if (res.value === "success") {
           this.setState({ loggedIn: true, errors: [] });
+          this.getDonorData();
         } else {
           this.setState(prevState => ({
             errors: [...prevState.errors, "Already registered, try Login?"]
@@ -91,6 +72,30 @@ class App extends React.Component {
   handleChange(event) {
     this.setState({ bloodtype: event.target.value });
   }
+
+  getDonorData = () => {
+    var url = new URL("http://localhost:5000/donor/query"),
+      params = { name: this.state.name };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res !== {}) {
+          console.log(res);
+          this.setState({ ...res });
+        } else {
+          this.setState(prevState => ({
+            errors: [...prevState.errors, "something went wrong"]
+          }));
+        }
+      });
+  };
 
   render() {
     return (
@@ -121,10 +126,9 @@ class App extends React.Component {
                 </InputGroup>
               </span>
             </div>
-
             <span>
               <label>
-                Pick Your Blood Type:
+                Pick Your Blood Type:{" "}
                 <select value={this.state.value} onChange={this.handleChange}>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
@@ -136,13 +140,12 @@ class App extends React.Component {
                   <option value="O-">O-</option>
                 </select>
               </label>
-            </span>
-
+            </span>{" "}
             <span>
               <Button variant="primary" onClick={this.handleLogin}>
                 Login
               </Button>
-            </span>
+            </span>{" "}
             <span>
               <Button variant="primary" onClick={this.handleRegister}>
                 Register
@@ -153,9 +156,13 @@ class App extends React.Component {
 
         {this.state.loggedIn && (
           <div>
-            <p>
-              hello {this.state.name} {this.state.bloodtype}
-            </p>
+            <h3>
+              Hello {this.state.name}, Your blood type is {this.state.bloodtype}{" "}
+              and you last donated:{" "}
+              {this.state.lastCollected === 0
+                ? "Never"
+                : this.state.lastCollected}
+            </h3>
           </div>
         )}
       </div>

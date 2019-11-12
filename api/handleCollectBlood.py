@@ -54,10 +54,7 @@ def handleCollectBlood(carid, bloodtype, db):
       collectedBloodList.append({'bagsize': 20, 'blood_amount': bloodAvailable, 'expiry': expiryTime})
       bloodAvailable = bloodAvailable - bloodAvailable
 
-   # for item in collectedBloodList:
-   #    if (bloodtype == 'A+'):
-   #       carObj['blood_A+']['unscreened'].append(item)
-   
+
    carObj['blood_'+bloodtype]['unscreened'] = carObj['blood_'+bloodtype]['unscreened'] + collectedBloodList
 
    print(str(collectedBloodList))

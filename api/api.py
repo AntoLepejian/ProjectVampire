@@ -16,6 +16,9 @@ from handleRegisterBatmobile import handleRegisterBatmobile
 from handleQueryBatmobile import handleQueryBatmobile
 from handleCheckDonorRegistered import handleCheckDonorRegistered
 from handleCheckBatmobileRegistered import handleCheckBatmobileRegistered
+from handleRegisterHospital import handleRegisterHospital
+from handleCheckHospitalRegistered import handleCheckHospitalRegistered
+from handleQueryHospital import handleQueryHospital
 
 
 app = flask.Flask(__name__)
@@ -73,6 +76,7 @@ def register_donor():
    #to update the local json file for persistance
    updatePersistantDatabase(updatedDB)
    return response
+   
 
 # This will result all the blood donors
 # INFO: Completed by rez
@@ -116,6 +120,17 @@ def check_batmobile_registered():
    response = handleCheckBatmobileRegistered(carid, dbjson)
    return response
 
+@app.route('/hospital/checkregistered', methods=['GET'])
+def check_hospital_registered():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing name"}'
+   response = handleCheckHospitalRegistered(hosp_name, dbjson)
+   return response
+      
+
+
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
 # INFO: Completed by rez
 @app.route('/blood/collect', methods=['GET'])
@@ -156,7 +171,14 @@ def query_car():
    response = handleQueryBatmobile(carid, dbjson)
    return response
 
-
+@app.route('/hospital/query', methods=['GET'])
+def query_hospital():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing name" }'
+   response = handleQueryHospital(hosp_name, dbjson)
+   return response
 
 # Will Register batmobile and initialise batmobile inventory
 # INFO: Completed by rez
@@ -169,6 +191,19 @@ def register_car():
    response, updatedDB = handleRegisterBatmobile(carid, dbjson)
    updatePersistantDatabase(updatedDB)
    return response
+
+@app.route('/hospital/register', methods=['GET'])
+def register_hospital():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing Hospital name" }'
+   response, updatedDB = handleRegisterHospital(hosp_name, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
+
+
+
 
 # DO NOT TOUCH: This is just a helper function that updates the database.
 # If you create a function with side effects that change the database, make sure you call this

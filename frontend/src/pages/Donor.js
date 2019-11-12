@@ -12,7 +12,7 @@ class App extends React.Component {
       name: "",
       loggedIn: false,
       errors: [],
-      lastCollected: 0
+      last_collected: 0
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -159,9 +159,11 @@ class App extends React.Component {
             <h3>
               Hello {this.state.name}, Your blood type is {this.state.bloodtype}{" "}
               and you last donated:{" "}
-              {this.state.lastCollected === 0
-                ? "Never"
-                : this.state.lastCollected}
+              {this.state.last_collected === 0 ? (
+                "Never"
+              ) : (
+                <p>{new Date(this.state.last_collected).toDateString()}</p>
+              )}
             </h3>
           </div>
         )}

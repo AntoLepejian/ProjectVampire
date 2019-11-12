@@ -44,16 +44,17 @@ def blood_request():
       amount = int(request.args['amount'])
    else:
       return '{ "value": "failed", "msg": "Missing amount" }'
-   if ('hospital' in request.args):
-      hospital = str(request.args['hospital'])
+   if ('name' in request.args):
+      hospital = str(request.args['name'])
    else:
-      return '{ "value": "failed", "msg": "Missing hospital" }'
+      return '{ "value": "failed", "msg": "Missing hospital name" }'
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
       return '{ "value": "failed", "msg": "Missing bloodtype" }'
 
-   response = handleBloodRequest(amount, hospital, bloodtype, dbjson)
+   response, updatedDB = handleBloodRequest(amount, hospital, bloodtype, dbjson)
+   updatePersistantDatabase(updatedDB)
    return response
 
 
@@ -212,7 +213,8 @@ def updatePersistantDatabase(newdb):
       db.purge()
    for item in newdb:
       db.insert(item)
-f = open("database.json", "w+")
+
+f = open("database.json", "a+")
 f.close()
 db = TinyDB('database.json')
 dbjson = db.all()

@@ -12,4 +12,4 @@ def handleRegisterDonor(name, bloodtype, db):
    return '{ "value": "success" }', db
 
 
-#http://localhost:5000/donor/register?name=anto&bloodtype=A+
+#http://localhost:5000/donor/register?name=rez&bloodtype=A%2B

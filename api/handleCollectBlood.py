@@ -54,7 +54,7 @@ def handleCollectBlood(carid, bloodtype, db):
       collectedBloodList.append({'bagsize': 20, 'blood_amount': bloodAvailable, 'expiry': expiryTime})
       bloodAvailable = bloodAvailable - bloodAvailable
 
-
+   print(bloodtype)
    carObj['blood_'+bloodtype]['unscreened'] = carObj['blood_'+bloodtype]['unscreened'] + collectedBloodList
 
    print(str(collectedBloodList))
@@ -63,5 +63,5 @@ def handleCollectBlood(carid, bloodtype, db):
    return '{ "value": "success", "msg":"blood collected!"}', db
 
 
-# http://localhost:5000/blood/collect?bloodtype=A+&carid=car649
+# http://localhost:5000/blood/collect?bloodtype=A%2B&carid=car649
 

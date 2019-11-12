@@ -8,10 +8,16 @@ import Bargraph from "../components/Bargraph";
 function Hospital() {
   const [hospitalName, setHospitalName] = useState("");
   const [errors, setErrors] = useState([]);
+  const [amount, setAmount] = useState(100);
   const [screened, setScreened] = useState([]);
   const [unscreened, setUnscreened] = useState([]);
   const [bloodtype, setBloodtype] = useState("A+");
   const [loggedIn, setloggedIn] = useState(false);
+
+  const handleChangeAmount = e => {
+    setAmount(parseInt(e.target.value));
+  };
+
   const handleChange = e => {
     setHospitalName(e.target.value);
   };
@@ -114,7 +120,7 @@ function Hospital() {
 
   const handleRequestBlood = () => {
     var url = new URL("http://localhost:5000/blood/request"),
-      params = { name: hospitalName, bloodtype: bloodtype };
+      params = { name: hospitalName, bloodtype, amount };
     Object.keys(params).forEach(key =>
       url.searchParams.append(key, params[key])
     );
@@ -130,7 +136,12 @@ function Hospital() {
           // fetch new blood levels
           setErrors([]);
           getHospitalData();
+        } else if (res.value === "partial-success") {
+          console.log(res);
+          getHospitalData();
+          setErrors([res.msg]);
         } else {
+          console.log(res);
           setErrors([res.msg]);
         }
       });
@@ -188,6 +199,21 @@ function Hospital() {
             <option value="O+">O+</option>
             <option value="O-">O-</option>
           </select>{" "}
+          <InputGroup className="mb-3" style={{ padding: "10px 0" }}>
+            <FormControl
+              placeholder="Blood Amount"
+              aria-label="Blood Amount"
+              aria-describedby="basic-addon2"
+              type="number"
+              min="1"
+              max="2000"
+              value={amount}
+              onChange={handleChangeAmount}
+            />
+            <InputGroup.Append>
+              <InputGroup.Text id="basic-addon2">mL</InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>{" "}
           <Button onClick={handleRequestBlood} variant="primary">
             Request Blood
           </Button>{" "}

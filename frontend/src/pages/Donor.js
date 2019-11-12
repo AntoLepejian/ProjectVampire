@@ -162,7 +162,9 @@ class App extends React.Component {
               {this.state.last_collected === 0 ? (
                 "Never"
               ) : (
-                <p>{new Date(this.state.last_collected).toDateString()}</p>
+                <p>
+                  {new Date(this.state.last_collected * 1000).toDateString()}
+                </p>
               )}
             </h3>
           </div>

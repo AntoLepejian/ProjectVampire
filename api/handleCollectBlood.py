@@ -39,7 +39,7 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
    # Bagsizes = [20, 50, 100, 200, 400]
    collectedBloodList = []
    #This sets the Expirty time (Approx 16 minutes in real time)
-   expiryTime = int(datetime.datetime.now().timestamp()) + 900
+   expiryTime = int(datetime.datetime.now().timestamp()) + 1000
    while (bloodAvailable >= 400):
       collectedBloodList.append({'bagsize': 400, 'blood_amount': 400, 'expiry': expiryTime})
       bloodAvailable = bloodAvailable - 400
@@ -67,7 +67,7 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
    if (collectedBloodAmount < amountNeeded):
       myreturn = {
          'value': "partial-success",
-         'msg': "partially collected " + str(bloodAvailable) + " out of " + str(amountNeeded)
+         'msg': "partially collected " + str(collectedBloodAmount) + " out of " + str(amountNeeded)
       }
       return json.dumps(myreturn), db
       # return '{ "value": "failed", "msg":"partially collected {} out of {} }'.format(bloodAvailable, amountNeeded), db

@@ -67,7 +67,7 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
    if (collectedBloodAmount < amountNeeded):
       myreturn = {
          'value': "partial-success",
-         'msg': "partially collected " + str(collectedBloodAmount) + " out of " + str(amountNeeded)
+         'msg': "partially collected " + str(collectedBloodAmount) + "mL out of " + str(amountNeeded) + "mL"
       }
       return json.dumps(myreturn), db
       # return '{ "value": "failed", "msg":"partially collected {} out of {} }'.format(bloodAvailable, amountNeeded), db

@@ -35,7 +35,7 @@ def handleBloodRequest(amount, hospital_name, bloodtype, db):
 
 
    hospObj['blood_'+bloodtype]['screened'] = hospObj['blood_'+bloodtype]['screened'] + collectedBloodBags
-   if (bloodRequired < 0):
+   if (bloodRequired <= 0):
       return '{ "value": "success" }', db
 
    collectedAmount = amount - bloodRequired

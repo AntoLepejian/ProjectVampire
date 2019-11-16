@@ -144,8 +144,10 @@ def collect_blood():
       carid = str(request.args['carid'])
    else:
       return '{ "value": "failed", "msg": "Missing carid" }'
+   if ('amount' in request.args):
+      amount = str(request.args['amount'])
 
-   response, updatedDB = handleCollectBlood(carid, bloodtype, dbjson)
+   response, updatedDB = handleCollectBlood(carid, bloodtype, amount, dbjson)
    updatePersistantDatabase(updatedDB)
    return response
 

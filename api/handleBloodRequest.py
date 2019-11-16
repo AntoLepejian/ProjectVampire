@@ -1,4 +1,5 @@
 import datetime
+import json
 
 
 #TODO: THis function should trigger events that result in blood being delivered to the Hospital 
@@ -30,13 +31,22 @@ def handleBloodRequest(amount, hospital_name, bloodtype, db):
                collectedBloodBags.append(bag)
                curr_blood_list.remove(bag)
                if (bloodRequired < 0):
-                  return '{ "value": "success" }', db
+                  break
 
 
    hospObj['blood_'+bloodtype]['screened'] = hospObj['blood_'+bloodtype]['screened'] + collectedBloodBags
+   if (bloodRequired < 0):
+      return '{ "value": "success" }', db
+
    collectedAmount = amount - bloodRequired
    if (len(collectedBloodBags) == 0):
-      return '{"value": "failure" }', db
+      return '{"value": "failed", "msg": "No Blood Available!" }', db
    else:
-      return '{"value" : "partial-success", "amount" : "%d" }' % collectedAmount, db
+      print("Partial Success")
+      retMsg = {
+         'value' : "partial-success",
+         'msg': "Partially Collected " + str(collectedAmount) + "mL out of " + str(amount) + "mL"
+      }
+      return json.dumps(retMsg), db
+      # return '{"value" : "partial-success", "msg" : "Partially collected {} out of {}" }'.format(collectedAmount, amount), db
      

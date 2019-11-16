@@ -171,6 +171,30 @@ function Batmobile() {
       });
   };
 
+  const handleCleanBloods = () => {
+    var url = new URL("http://localhost:5000/batmobile/removeexpired"),
+      params = { carid };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.value === "success") {
+          // fetch new blood levels
+          setErrors([]);
+          fetchBatMobileData();
+        } else {
+          console.log(res);
+          setErrors([res.msg]);
+        }
+      });
+  };
+
   return (
     <div className="home">
       {errors.map((err, id) => (
@@ -244,6 +268,11 @@ function Batmobile() {
           <span>
             <Button onClick={handleScreenBlood} variant="primary">
               Screen all Bloods
+            </Button>{" "}
+          </span>
+          <span>
+            <Button onClick={handleCleanBloods} variant="primary">
+              Remove Expired Bloods
             </Button>
           </span>
         </div>

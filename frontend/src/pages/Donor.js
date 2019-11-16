@@ -65,9 +65,36 @@ class Donor extends React.Component {
         if (res.value === "success") {
           this.setState({ loggedIn: true, errors: [] });
           this.getDonorData();
+          setInterval(() => {
+            this.whenCanDonateNext();
+          }, 1000);
         } else {
           this.setState(prevState => ({
             errors: [...prevState.errors, "Already registered, try Login?"]
+          }));
+        }
+      });
+  };
+
+  handleDeregister = () => {
+    var url = new URL("http://localhost:5000/donor/deregister"),
+      params = { name: this.state.name };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.value === "success") {
+          this.setState({ loggedIn: false, errors: [] });
+        } else {
+          this.setState(prevState => ({
+            errors: [...prevState.errors, res.msg]
           }));
         }
       });
@@ -104,6 +131,7 @@ class Donor extends React.Component {
   whenCanDonateNext = () => {
     if (this.state.last_collected === 0) {
       this.setState({ next: "Now" });
+      return;
     }
     let x = parseInt(Date.now() / 1000) - this.state.last_collected;
     let next = parseInt(x / 60);
@@ -190,6 +218,9 @@ class Donor extends React.Component {
               <b>Can next donate: </b>
               {this.state.next}
             </p>
+            <Button onClick={this.handleDeregister} variant="primary">
+              Deregister
+            </Button>{" "}
           </div>
         )}
       </div>

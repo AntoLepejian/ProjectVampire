@@ -147,6 +147,30 @@ function Hospital() {
       });
   };
 
+  const handleCleanBloods = () => {
+    var url = new URL("http://localhost:5000/hospital/removeexpired"),
+      params = { name: hospitalName };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.value === "success") {
+          // fetch new blood levels
+          setErrors([]);
+          getHospitalData();
+        } else {
+          console.log(res);
+          setErrors([res.msg]);
+        }
+      });
+  };
+
   return (
     <div className="home">
       {errors.map((err, id) => (
@@ -216,6 +240,9 @@ function Hospital() {
           </InputGroup>{" "}
           <Button onClick={handleRequestBlood} variant="primary">
             Request Blood
+          </Button>{" "}
+          <Button onClick={handleCleanBloods} variant="primary">
+            Remove Expired Bloods
           </Button>{" "}
         </div>
       )}

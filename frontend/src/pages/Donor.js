@@ -102,6 +102,9 @@ class Donor extends React.Component {
   };
 
   whenCanDonateNext = () => {
+    if (this.state.last_collected === 0) {
+      this.setState({ next: "Now" });
+    }
     let x = parseInt(Date.now() / 1000) - this.state.last_collected;
     let next = parseInt(x / 60);
     var tLeft = 15 * 60 - x;

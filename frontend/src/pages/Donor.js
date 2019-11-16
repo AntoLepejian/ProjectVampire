@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import Alert from "react-bootstrap/Alert";
 
-class App extends React.Component {
+class Donor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,7 +12,8 @@ class App extends React.Component {
       name: "",
       loggedIn: false,
       errors: [],
-      last_collected: 0
+      last_collected: 0,
+      next: "Calculating.."
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -34,6 +35,9 @@ class App extends React.Component {
         if (res.status === "registered") {
           this.setState({ loggedIn: true, errors: [] });
           this.getDonorData();
+          setInterval(() => {
+            this.whenCanDonateNext();
+          }, 1000);
         } else {
           this.setState(prevState => ({
             errors: [
@@ -97,6 +101,19 @@ class App extends React.Component {
       });
   };
 
+  whenCanDonateNext = () => {
+    let x = parseInt(Date.now() / 1000) - this.state.last_collected;
+    let next = parseInt(x / 60);
+    var tLeft = 15 * 60 - x;
+    var minutes = Math.floor(tLeft / 60);
+    var seconds = tLeft - minutes * 60;
+    if (next > 15) {
+      this.setState({ next: "Now" });
+    } else {
+      this.setState({ next: `in ${minutes} minutes ${seconds} seconds` });
+    }
+  };
+
   render() {
     return (
       <div className="home">
@@ -156,17 +173,20 @@ class App extends React.Component {
 
         {this.state.loggedIn && (
           <div>
-            <h3>
-              Hello {this.state.name}, Your blood type is {this.state.bloodtype}{" "}
-              and you last donated:{" "}
-              {this.state.last_collected === 0 ? (
-                "Never"
-              ) : (
-                <p>
-                  {new Date(this.state.last_collected * 1000).toDateString()}
-                </p>
-              )}
-            </h3>
+            <h3>Hello {this.state.name}</h3>
+            <p>
+              <b>Blood type:</b> {this.state.bloodtype}
+            </p>
+            <p>
+              <b>Last donated: </b>
+              {this.state.last_collected === 0
+                ? "Never"
+                : new Date(this.state.last_collected * 1000).toString()}
+            </p>
+            <p>
+              <b>Can next donate: </b>
+              {this.state.next}
+            </p>
           </div>
         )}
       </div>
@@ -174,4 +194,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Donor;

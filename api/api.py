@@ -16,6 +16,11 @@ from handleRegisterBatmobile import handleRegisterBatmobile
 from handleQueryBatmobile import handleQueryBatmobile
 from handleCheckDonorRegistered import handleCheckDonorRegistered
 from handleCheckBatmobileRegistered import handleCheckBatmobileRegistered
+from handleRegisterHospital import handleRegisterHospital
+from handleCheckHospitalRegistered import handleCheckHospitalRegistered
+from handleQueryHospital import handleQueryHospital
+from handleRemoveExpiredHospital import handleRemoveExpiredHospital
+from handleRemoveExpiredBatmobile import handleRemoveExpiredBatmobile
 
 
 app = flask.Flask(__name__)
@@ -41,16 +46,17 @@ def blood_request():
       amount = int(request.args['amount'])
    else:
       return '{ "value": "failed", "msg": "Missing amount" }'
-   if ('hospital' in request.args):
-      hospital = str(request.args['hospital'])
+   if ('name' in request.args):
+      hospital = str(request.args['name'])
    else:
-      return '{ "value": "failed", "msg": "Missing hospital" }'
+      return '{ "value": "failed", "msg": "Missing hospital name" }'
    if ('bloodtype' in request.args):
       bloodtype = str(request.args['bloodtype'])
    else:
       return '{ "value": "failed", "msg": "Missing bloodtype" }'
 
-   response = handleBloodRequest(amount, hospital, bloodtype, dbjson)
+   response, updatedDB = handleBloodRequest(amount, hospital, bloodtype, dbjson)
+   updatePersistantDatabase(updatedDB)
    return response
 
 
@@ -73,6 +79,7 @@ def register_donor():
    #to update the local json file for persistance
    updatePersistantDatabase(updatedDB)
    return response
+   
 
 # This will result all the blood donors
 # INFO: Completed by rez
@@ -116,6 +123,17 @@ def check_batmobile_registered():
    response = handleCheckBatmobileRegistered(carid, dbjson)
    return response
 
+@app.route('/hospital/checkregistered', methods=['GET'])
+def check_hospital_registered():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing name"}'
+   response = handleCheckHospitalRegistered(hosp_name, dbjson)
+   return response
+      
+
+
 #This will be called by the batmobile to signal initiation of a collection tour for a specific bloodtype
 # INFO: Completed by rez
 @app.route('/blood/collect', methods=['GET'])
@@ -128,8 +146,31 @@ def collect_blood():
       carid = str(request.args['carid'])
    else:
       return '{ "value": "failed", "msg": "Missing carid" }'
+   if ('amount' in request.args):
+      amount = str(request.args['amount'])
 
-   response, updatedDB = handleCollectBlood(carid, bloodtype, dbjson)
+   response, updatedDB = handleCollectBlood(carid, bloodtype, amount, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
+
+@app.route('/hospital/removeexpired', methods=['GET'])
+def remove_hospital_expired():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing name"}' 
+      
+   response, updatedDB = handleRemoveExpiredHospital(hosp_name, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
+
+@app.route('/batmobile/removeexpired', methods=['GET'])
+def remove_car_expired():
+   if ('carid' in request.args):
+      car_name = str(request.args['carid'])
+   else:
+      return '{ "value": "failed", "msg": "Missing carid" }'
+   response, updatedDB = handleRemoveExpiredBatmobile(car_name, dbjson)
    updatePersistantDatabase(updatedDB)
    return response
 
@@ -156,7 +197,14 @@ def query_car():
    response = handleQueryBatmobile(carid, dbjson)
    return response
 
-
+@app.route('/hospital/query', methods=['GET'])
+def query_hospital():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing name" }'
+   response = handleQueryHospital(hosp_name, dbjson)
+   return response
 
 # Will Register batmobile and initialise batmobile inventory
 # INFO: Completed by rez
@@ -170,6 +218,19 @@ def register_car():
    updatePersistantDatabase(updatedDB)
    return response
 
+@app.route('/hospital/register', methods=['GET'])
+def register_hospital():
+   if ('name' in request.args):
+      hosp_name = str(request.args['name'])
+   else:
+      return '{ "value": "failed", "msg": "Missing Hospital name" }'
+   response, updatedDB = handleRegisterHospital(hosp_name, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
+
+
+
+
 # DO NOT TOUCH: This is just a helper function that updates the database.
 # If you create a function with side effects that change the database, make sure you call this
 def updatePersistantDatabase(newdb):
@@ -177,7 +238,8 @@ def updatePersistantDatabase(newdb):
       db.purge()
    for item in newdb:
       db.insert(item)
-f = open("database.json", "w+")
+
+f = open("database.json", "a+")
 f.close()
 db = TinyDB('database.json')
 dbjson = db.all()

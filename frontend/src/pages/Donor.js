@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import Alert from "react-bootstrap/Alert";
 
-class App extends React.Component {
+class Donor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bloodtype: "A+", name: "", loggedIn: false, errors: [] };
+    this.state = {
+      bloodtype: "A+",
+      name: "",
+      loggedIn: false,
+      errors: [],
+      last_collected: 0,
+      next: "Calculating.."
+    };
 
     this.handleChange = this.handleChange.bind(this);
   }
@@ -25,9 +32,12 @@ class App extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         if (res.status === "registered") {
           this.setState({ loggedIn: true, errors: [] });
+          this.getDonorData();
+          setInterval(() => {
+            this.whenCanDonateNext();
+          }, 1000);
         } else {
           this.setState(prevState => ({
             errors: [
@@ -38,32 +48,6 @@ class App extends React.Component {
         }
       });
   };
-
-   fetchBatMobileData = () => {
-    var url = new URL("http://localhost:5000/donor/query"),
-      params = { name: this.state.name };
-    Object.keys(params).forEach(key =>
-      url.searchParams.append(key, params[key])
-    );
-    fetch(url, {
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        if (res !== {}) {
-        } else {
-          this.setState(prevState => ({
-          errors: [
-            ...prevState.errors, 
-            "something went wrong"
-          ]
-        }));
-        }
-      });
-  };
-
 
   handleRegister = () => {
     var url = new URL("http://localhost:5000/donor/register"),
@@ -80,6 +64,7 @@ class App extends React.Component {
       .then(res => {
         if (res.value === "success") {
           this.setState({ loggedIn: true, errors: [] });
+          this.getDonorData();
         } else {
           this.setState(prevState => ({
             errors: [...prevState.errors, "Already registered, try Login?"]
@@ -91,6 +76,46 @@ class App extends React.Component {
   handleChange(event) {
     this.setState({ bloodtype: event.target.value });
   }
+
+  getDonorData = () => {
+    var url = new URL("http://localhost:5000/donor/query"),
+      params = { name: this.state.name };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res !== {}) {
+          console.log(res);
+          this.setState({ ...res });
+        } else {
+          this.setState(prevState => ({
+            errors: [...prevState.errors, "something went wrong"]
+          }));
+        }
+      });
+  };
+
+  whenCanDonateNext = () => {
+    if (this.state.last_collected === 0) {
+      this.setState({ next: "Now" });
+    }
+    let x = parseInt(Date.now() / 1000) - this.state.last_collected;
+    let next = parseInt(x / 60);
+    var tLeft = 15 * 60 - x;
+    var minutes = Math.floor(tLeft / 60);
+    var seconds = tLeft - minutes * 60;
+    if (next > 15) {
+      this.setState({ next: "Now" });
+    } else {
+      this.setState({ next: `in ${minutes} minutes ${seconds} seconds` });
+    }
+  };
 
   render() {
     return (
@@ -121,10 +146,9 @@ class App extends React.Component {
                 </InputGroup>
               </span>
             </div>
-
             <span>
               <label>
-                Pick Your Blood Type:
+                Pick Your Blood Type:{" "}
                 <select value={this.state.value} onChange={this.handleChange}>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
@@ -136,13 +160,12 @@ class App extends React.Component {
                   <option value="O-">O-</option>
                 </select>
               </label>
-            </span>
-
+            </span>{" "}
             <span>
               <Button variant="primary" onClick={this.handleLogin}>
                 Login
               </Button>
-            </span>
+            </span>{" "}
             <span>
               <Button variant="primary" onClick={this.handleRegister}>
                 Register
@@ -153,8 +176,19 @@ class App extends React.Component {
 
         {this.state.loggedIn && (
           <div>
+            <h3>Hello {this.state.name}</h3>
             <p>
-              hello {this.state.name} {this.state.bloodtype}
+              <b>Blood type:</b> {this.state.bloodtype}
+            </p>
+            <p>
+              <b>Last donated: </b>
+              {this.state.last_collected === 0
+                ? "Never"
+                : new Date(this.state.last_collected * 1000).toString()}
+            </p>
+            <p>
+              <b>Can next donate: </b>
+              {this.state.next}
             </p>
           </div>
         )}
@@ -163,4 +197,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Donor;

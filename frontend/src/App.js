@@ -4,6 +4,7 @@ import { Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import Batmobile from "./pages/Batmobile";
 import Donor from "./pages/Donor";
+import Hospital from "./pages/Hospital";
 import Navbar from "react-bootstrap/Navbar";
 import vampireImage from "./vampire-icon.png";
 import "./App.css";
@@ -40,15 +41,7 @@ function App() {
                 component={props => <Batmobile />}
               />
               <Route path="/donor" exact component={props => <Donor />} />
-              <Route
-                path="/hospital"
-                exact
-                component={props => (
-                  <div>
-                    <p>hospital</p>
-                  </div>
-                )}
-              />
+              <Route path="/hospital" exact component={props => <Hospital />} />
             </Switch>
           </React.Fragment>
         )}

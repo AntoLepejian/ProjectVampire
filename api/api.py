@@ -20,6 +20,7 @@ from handleRegisterHospital import handleRegisterHospital
 from handleCheckHospitalRegistered import handleCheckHospitalRegistered
 from handleQueryHospital import handleQueryHospital
 from handleRemoveExpiredHospital import handleRemoveExpiredHospital
+from handleRemoveExpiredBatmobile import handleRemoveExpiredBatmobile
 
 
 app = flask.Flask(__name__)
@@ -163,6 +164,15 @@ def remove_hospital_expired():
    updatePersistantDatabase(updatedDB)
    return response
 
+@app.route('/batmobile/removeexpired', methods=['GET'])
+def remove_car_expired():
+   if ('carid' in request.args):
+      car_name = str(request.args['carid'])
+   else:
+      return '{ "value": "failed", "msg": "Missing carid" }'
+   response, updatedDB = handleRemoveExpiredBatmobile(car_name, dbjson)
+   updatePersistantDatabase(updatedDB)
+   return response
 
 #This will be called by the batmobile to screen all the blood it has
 @app.route('/blood/screen', methods=['GET'])

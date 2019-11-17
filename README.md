@@ -4,8 +4,6 @@
 
 #### Backend
 
-# testing
-
 0. clone this repo to your computer
 1. Install Python
 1. Update apt-get `sudo apt-get update`

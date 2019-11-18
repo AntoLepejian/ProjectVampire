@@ -135,14 +135,15 @@ class Donor extends React.Component {
       return;
     }
     let x = parseInt(Date.now() / 1000) - this.state.last_collected;
-    let next = parseInt(x / 60);
-    var tLeft = 15 * 60 - x;
+    let next = x;
+    var tLeft = 60 - x;
     var minutes = Math.floor(tLeft / 60);
     var seconds = tLeft - minutes * 60;
-    if (next > 15) {
+    if (next >= 60) {
       this.setState({ next: "Now" });
     } else {
-      this.setState({ next: `in ${minutes} minutes ${seconds} seconds` });
+      let secs = seconds === 1 ? "second" : "seconds";
+      this.setState({ next: `in ${seconds} ${secs}` });
     }
   };
 
@@ -221,6 +222,15 @@ class Donor extends React.Component {
             </p>
             <Button onClick={this.handleDeregister} variant="primary">
               Deregister
+            </Button>{" "}
+            <Button
+              onClick={() => {
+                this.getDonorData();
+                this.whenCanDonateNext();
+              }}
+              variant="primary"
+            >
+              Refresh
             </Button>{" "}
           </div>
         )}

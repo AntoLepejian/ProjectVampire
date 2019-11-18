@@ -228,6 +228,12 @@ function Batmobile() {
               Register
             </Button>
           </span>
+          <div>
+              <text style={{fontWeight: 'bold'}}>
+                <br/>Register as a New Batmobile. Or Log in. <br/>
+                If registering please use a unique name
+              </text>
+            </div>
         </div>
       )}
       {loggedIn && (
@@ -253,6 +259,7 @@ function Batmobile() {
             <option value="O+">O+</option>
             <option value="O-">O-</option>
           </select>{" "}
+          
           <InputGroup className="mb-3" style={{ padding: "10px 0" }}>
             <FormControl
               placeholder="Blood Amount"

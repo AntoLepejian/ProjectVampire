@@ -207,7 +207,11 @@ function Hospital() {
       {loggedIn && (
         <div>
           <h3>Hospital Name: {hospitalName}</h3>
-          <Bargraph screened={screened} unscreened={unscreened} />
+          <Bargraph
+            screened={screened}
+            unscreened={unscreened}
+            isBatmobile={false}
+          />
           <select
             value={bloodtype}
             onChange={event => {

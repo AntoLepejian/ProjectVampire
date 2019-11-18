@@ -231,7 +231,11 @@ function Batmobile() {
       {loggedIn && (
         <div>
           <h3>Batmobile ID: {carid}</h3>
-          <Bargraph screened={screened} unscreened={unscreened} />
+          <Bargraph
+            screened={screened}
+            unscreened={unscreened}
+            isBatmobile={true}
+          />
           <select
             value={bloodtype}
             onChange={event => {

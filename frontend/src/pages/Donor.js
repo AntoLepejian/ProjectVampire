@@ -65,6 +65,7 @@ class Donor extends React.Component {
         if (res.value === "success") {
           this.setState({ loggedIn: true, errors: [] });
           this.getDonorData();
+          this.whenCanDonateNext();
           setInterval(() => {
             this.whenCanDonateNext();
           }, 1000);

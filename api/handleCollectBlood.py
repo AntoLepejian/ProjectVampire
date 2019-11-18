@@ -25,7 +25,7 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
             lastCollected = int(item['last_collected'])
             currentTime = int(datetime.datetime.now().timestamp())
             difference = currentTime-lastCollected
-            if (difference > 900):
+            if (difference > 60):
                item['last_collected'] = currentTime
                bloodAvailable = bloodAvailable + random.randint(100, 500)
                if (bloodAvailable > amountNeeded):
@@ -39,7 +39,7 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
    # Bagsizes = [20, 50, 100, 200, 400]
    collectedBloodList = []
    #This sets the Expirty time (Approx 16 minutes in real time)
-   expiryTime = int(datetime.datetime.now().timestamp()) + 1000
+   expiryTime = int(datetime.datetime.now().timestamp()) + 60
    while (bloodAvailable >= 400):
       collectedBloodList.append({'bagsize': 400, 'blood_amount': 400, 'expiry': expiryTime})
       bloodAvailable = bloodAvailable - 400

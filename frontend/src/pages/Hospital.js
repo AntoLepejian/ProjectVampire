@@ -118,6 +118,8 @@ function Hospital() {
       });
   };
 
+  const handleLogout = () => setloggedIn(false);
+
   const handleRequestBlood = () => {
     var url = new URL("http://localhost:5000/blood/request"),
       params = { name: hospitalName, bloodtype, amount };
@@ -207,7 +209,11 @@ function Hospital() {
       {loggedIn && (
         <div>
           <h3>Hospital Name: {hospitalName}</h3>
-          <Bargraph screened={screened} unscreened={unscreened} />
+          <Bargraph
+            screened={screened}
+            unscreened={unscreened}
+            isBatmobile={false}
+          />
           <select
             value={bloodtype}
             onChange={event => {
@@ -243,6 +249,9 @@ function Hospital() {
           </Button>{" "}
           <Button onClick={handleCleanBloods} variant="primary">
             Remove Expired Bloods
+          </Button>{" "}
+          <Button onClick={handleLogout} variant="primary">
+            Logout
           </Button>{" "}
         </div>
       )}

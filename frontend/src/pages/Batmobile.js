@@ -22,6 +22,8 @@ function Batmobile() {
     setAmount(parseInt(e.target.value));
   };
 
+  const handleLogout = () => setloggedIn(false);
+
   const handleLogin = () => {
     var url = new URL("http://localhost:5000/batmobile/checkregistered"),
       params = { carid: carid };
@@ -171,6 +173,30 @@ function Batmobile() {
       });
   };
 
+  const handleCleanBloods = () => {
+    var url = new URL("http://localhost:5000/batmobile/removeexpired"),
+      params = { carid };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.value === "success") {
+          // fetch new blood levels
+          setErrors([]);
+          fetchBatMobileData();
+        } else {
+          console.log(res);
+          setErrors([res.msg]);
+        }
+      });
+  };
+
   return (
     <div className="home">
       {errors.map((err, id) => (
@@ -207,7 +233,11 @@ function Batmobile() {
       {loggedIn && (
         <div>
           <h3>Batmobile ID: {carid}</h3>
-          <Bargraph screened={screened} unscreened={unscreened} />
+          <Bargraph
+            screened={screened}
+            unscreened={unscreened}
+            isBatmobile={true}
+          />
           <select
             value={bloodtype}
             onChange={event => {
@@ -244,7 +274,17 @@ function Batmobile() {
           <span>
             <Button onClick={handleScreenBlood} variant="primary">
               Screen all Bloods
-            </Button>
+            </Button>{" "}
+          </span>
+          <span>
+            <Button onClick={handleCleanBloods} variant="primary">
+              Remove Expired Bloods
+            </Button>{" "}
+          </span>
+          <span>
+            <Button onClick={handleLogout} variant="primary">
+              Logout
+            </Button>{" "}
           </span>
         </div>
       )}

@@ -5,7 +5,7 @@ export default class BarChart extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    let obj = {
       options: {
         chart: {
           stacked: true,
@@ -14,6 +14,18 @@ export default class BarChart extends React.Component {
           },
           zoom: {
             enabled: true
+          }
+        },
+        title: {
+          text: "Blood Inventory",
+          align: "center",
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "32px",
+            color: "#263238"
           }
         },
         responsive: [
@@ -36,7 +48,15 @@ export default class BarChart extends React.Component {
 
         xaxis: {
           type: "category",
-          categories: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+          categories: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+          title: {
+            text: "Blood Categories"
+          }
+        },
+        yaxis: {
+          title: {
+            text: "Blood Levels (mLs)"
+          }
         },
         legend: {
           position: "right",
@@ -50,13 +70,22 @@ export default class BarChart extends React.Component {
         {
           name: "Screened",
           data: this.props.screened
-        },
-        {
-          name: "Unscreened",
-          data: this.props.unscreened
         }
-      ]
+      ],
+      legend: {
+        show: true
+      }
     };
+
+    if (this.props.isBatmobile === true) {
+      console.log("ture");
+      obj.series.push({
+        name: "Unscreened",
+        data: this.props.unscreened
+      });
+    }
+    this.state = obj;
+    console.log(this.state);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,13 +93,19 @@ export default class BarChart extends React.Component {
       nextProps.screened !== this.props.screened ||
       nextProps.unscreened !== this.props.unscreened
     ) {
+      let lst = [{ name: "Screened", data: nextProps.screened }];
+      console.log(this.state);
+      if (this.props.isBatmobile === true) {
+        lst.push({
+          name: "Unscreened",
+          data: nextProps.unscreened
+        });
+      }
       this.setState(state => ({
         ...state,
-        series: [
-          { name: "Screened", data: nextProps.screened },
-          { name: "Unscreened", data: nextProps.unscreened }
-        ]
+        series: lst
       }));
+      console.log(this.state);
     }
   }
 

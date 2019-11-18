@@ -65,9 +65,37 @@ class Donor extends React.Component {
         if (res.value === "success") {
           this.setState({ loggedIn: true, errors: [] });
           this.getDonorData();
+          this.whenCanDonateNext();
+          setInterval(() => {
+            this.whenCanDonateNext();
+          }, 1000);
         } else {
           this.setState(prevState => ({
             errors: [...prevState.errors, "Already registered, try Login?"]
+          }));
+        }
+      });
+  };
+
+  handleDeregister = () => {
+    var url = new URL("http://localhost:5000/donor/deregister"),
+      params = { name: this.state.name };
+    Object.keys(params).forEach(key =>
+      url.searchParams.append(key, params[key])
+    );
+    fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.value === "success") {
+          this.setState({ loggedIn: false, errors: [] });
+        } else {
+          this.setState(prevState => ({
+            errors: [...prevState.errors, res.msg]
           }));
         }
       });
@@ -104,18 +132,22 @@ class Donor extends React.Component {
   whenCanDonateNext = () => {
     if (this.state.last_collected === 0) {
       this.setState({ next: "Now" });
+      return;
     }
     let x = parseInt(Date.now() / 1000) - this.state.last_collected;
-    let next = parseInt(x / 60);
-    var tLeft = 15 * 60 - x;
+    let next = x;
+    var tLeft = 60 - x;
     var minutes = Math.floor(tLeft / 60);
     var seconds = tLeft - minutes * 60;
-    if (next > 15) {
+    if (next >= 60) {
       this.setState({ next: "Now" });
     } else {
-      this.setState({ next: `in ${minutes} minutes ${seconds} seconds` });
+      let secs = seconds === 1 ? "second" : "seconds";
+      this.setState({ next: `in ${seconds} ${secs}` });
     }
   };
+
+  handleLogout = () => this.setState({ loggedIn: false });
 
   render() {
     return (
@@ -190,6 +222,21 @@ class Donor extends React.Component {
               <b>Can next donate: </b>
               {this.state.next}
             </p>
+            <Button onClick={this.handleDeregister} variant="primary">
+              Deregister
+            </Button>{" "}
+            <Button
+              onClick={() => {
+                this.getDonorData();
+                this.whenCanDonateNext();
+              }}
+              variant="primary"
+            >
+              Refresh
+            </Button>{" "}
+            <Button onClick={this.handleLogout} variant="primary">
+              Logout
+            </Button>{" "}
           </div>
         )}
       </div>

@@ -147,6 +147,8 @@ class Donor extends React.Component {
     }
   };
 
+  handleLogout = () => this.setState({ loggedIn: false });
+
   render() {
     return (
       <div className="home">
@@ -231,6 +233,9 @@ class Donor extends React.Component {
               variant="primary"
             >
               Refresh
+            </Button>{" "}
+            <Button onClick={this.handleLogout} variant="primary">
+              Logout
             </Button>{" "}
           </div>
         )}

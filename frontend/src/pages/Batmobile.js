@@ -22,6 +22,8 @@ function Batmobile() {
     setAmount(parseInt(e.target.value));
   };
 
+  const handleLogout = () => setloggedIn(false);
+
   const handleLogin = () => {
     var url = new URL("http://localhost:5000/batmobile/checkregistered"),
       params = { carid: carid };
@@ -277,7 +279,12 @@ function Batmobile() {
           <span>
             <Button onClick={handleCleanBloods} variant="primary">
               Remove Expired Bloods
-            </Button>
+            </Button>{" "}
+          </span>
+          <span>
+            <Button onClick={handleLogout} variant="primary">
+              Logout
+            </Button>{" "}
           </span>
         </div>
       )}

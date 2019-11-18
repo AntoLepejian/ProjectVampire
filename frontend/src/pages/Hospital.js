@@ -118,6 +118,8 @@ function Hospital() {
       });
   };
 
+  const handleLogout = () => setloggedIn(false);
+
   const handleRequestBlood = () => {
     var url = new URL("http://localhost:5000/blood/request"),
       params = { name: hospitalName, bloodtype, amount };
@@ -247,6 +249,9 @@ function Hospital() {
           </Button>{" "}
           <Button onClick={handleCleanBloods} variant="primary">
             Remove Expired Bloods
+          </Button>{" "}
+          <Button onClick={handleLogout} variant="primary">
+            Logout
           </Button>{" "}
         </div>
       )}

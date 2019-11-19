@@ -156,7 +156,6 @@ class Donor extends React.Component {
           <Alert key={id} variant="danger">
             {err}
           </Alert>
-         
         ))}
 
         {!this.state.loggedIn && (
@@ -178,7 +177,6 @@ class Donor extends React.Component {
                   />
                 </InputGroup>
               </span>
-            
             </div>
             <span>
               <label>
@@ -206,12 +204,13 @@ class Donor extends React.Component {
               </Button>
             </span>
             <div>
-              <text style={{fontWeight: 'bold'}}>
-                <br/>Register as a New Donor. Or Log in. <br/>
-                If registering please disclose blood type using given the drop down
-              </text>
+              <p style={{ fontWeight: "bold" }}>
+                <br />
+                Register as a New Donor. Or Log in. <br />
+                If registering please disclose blood type using given the drop
+                down
+              </p>
             </div>
-            
           </div>
         )}
 

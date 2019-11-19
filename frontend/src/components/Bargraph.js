@@ -1,4 +1,4 @@
-/*import React from "react";
+import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 export default class BarChart extends React.Component {
@@ -123,4 +123,3 @@ export default class BarChart extends React.Component {
     );
   }
 }
-*/

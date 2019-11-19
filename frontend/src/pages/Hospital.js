@@ -205,13 +205,12 @@ function Hospital() {
             </Button>
           </span>
           <div>
-              <text style={{fontWeight: 'bold'}}>
-                <br/>Register as a New Hospital. Or Log in. <br/>
-                If registering please use a unique name
-              </text>
-              
-            </div>
-
+            <p style={{ fontWeight: "bold" }}>
+              <br />
+              Register as a New Hospital. Or Log in. <br />
+              If registering please use a unique name
+            </p>
+          </div>
         </div>
       )}
       {loggedIn && (

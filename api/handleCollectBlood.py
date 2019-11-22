@@ -40,24 +40,25 @@ def handleCollectBlood(carid, bloodtype, amount,  db):
    collectedBloodList = []
    #This sets the Expirty time (Approx 16 minutes in real time)
    expiryTime = int(datetime.datetime.now().timestamp()) + 60
-   while (bloodAvailable >= 400):
-      collectedBloodList.append({'bagsize': 400, 'blood_amount': 400, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - 400
-   while (bloodAvailable >= 200 and bloodAvailable < 400):
-      collectedBloodList.append({'bagsize': 200, 'blood_amount': 200, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - 200
-   while(bloodAvailable >= 100 and bloodAvailable < 200):
-      collectedBloodList.append({'bagsize': 100, 'blood_amount': 100, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - 100
-   while(bloodAvailable >= 50 and bloodAvailable < 100):
-      collectedBloodList.append({'bagsize': 50, 'blood_amount': 50, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - 50
-   while (bloodAvailable >= 20 and bloodAvailable < 50):
-      collectedBloodList.append({'bagsize': 20, 'blood_amount': 20, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - 20
-   while (bloodAvailable > 0 and bloodAvailable < 20):
-      collectedBloodList.append({'bagsize': 20, 'blood_amount': bloodAvailable, 'expiry': expiryTime})
-      bloodAvailable = bloodAvailable - bloodAvailable
+   while (bloodAvailable > 0):
+      if (bloodAvailable >= 400):
+         collectedBloodList.append({'bagsize': 400, 'blood_amount': 400, 'expiry': expiryTime})
+         bloodAvailable = bloodAvailable - 400
+      elif (bloodAvailable >= 200 and bloodAvailable < 400):
+         collectedBloodList.append({'bagsize': 200, 'blood_amount': 200, 'expiry': expiryTime})
+         bloodAvailable = bloodAvailable - 200
+      elif(bloodAvailable >= 100 and bloodAvailable < 200):
+         collectedBloodList.append({'bagsize': 100, 'blood_amount': 100, 'expiry': expiryTime})
+         bloodAvailable = bloodAvailable - 100
+      elif(bloodAvailable >= 50 and bloodAvailable < 100):
+         collectedBloodList.append({'bagsize': 50, 'blood_amount': 50, 'expiry': expiryTime})
+         bloodAvailable = bloodAvailable - 50
+      elif (bloodAvailable >= 20 and bloodAvailable < 50):
+         collectedBloodList.append({'bagsize': 20, 'blood_amount': 20, 'expiry': expiryTime})
+         bloodAvailable = bloodAvailable - 20
+      elif (bloodAvailable > 0 and bloodAvailable < 20):
+         collectedBloodList.append({'bagsize': 20, 'blood_amount': bloodAvailable, 'expiry': expiryTime})
+         bloodAvailable = 0
 
    print(bloodtype)
    carObj['blood_'+bloodtype]['unscreened'] = carObj['blood_'+bloodtype]['unscreened'] + collectedBloodList

@@ -13,6 +13,7 @@ ensures amount == 0
     amount:= bloodAvailable;
     assert amount > 0;
     //verifies that at least one bag is required since bloodamount > 0 
+    //NOTE: Code is split into filling bags, then insert however in python they are done together.
     while (amount > 0)
     invariant amount >= 0 
     invariant amount == 0 ==> bag400 + bag200 + bag100 + bag50 + bag20 > 0

@@ -1,6 +1,6 @@
 method Handleblood(bloodAvailable:int) returns (amount: int, bagsize:array<int>, blood_amount:array<int>)
 requires bloodAvailable > 0
-ensures bloodAvailable - amount == bloodAvailable
+ensures amount == 0
 {
 
     var bag400:=0;

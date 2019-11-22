@@ -1,11 +1,10 @@
-
-predicate sorted(blood: array?<int>, from: int, to: int)
+predicate sorted(blood: array<int>, from: int, to: int)
   reads blood
   requires blood != null
   {
     forall i, k :: 0 <= from <= i <= k <= to < blood.Length ==> blood[i] <= blood[k]
   }
-predicate sortedopp(blood: array?<int>, from: int, to: int)
+predicate sortedopp(blood: array<int>, from: int, to: int)
   reads blood
   requires blood != null
   {
